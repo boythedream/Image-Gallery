@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <title>Upload Image</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+      }
+
+      /* Enhanced Headings */
+      h2,
+      h3 {
+        font-weight: bold;
+        color: #343a40;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+      }
+
+      h2::after,
+      h3::after {
+        content: "";
+        display: block;
+        width: 80px;
+        height: 3px;
+        background: linear-gradient(90deg, #007bff, #00c6ff);
+        margin: 10px auto 0;
+        border-radius: 2px;
+      }
+
+      h2 {
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      h3 {
+        font-size: 1.8rem;
+      }
+
+      .container {
+        max-width: 800px;
+        margin-top: 20px;
+      }
+
+      /* Enhanced Form Inputs */
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 5px 15px;
+        font-size: 1rem;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .form-group input:focus,
+      .form-group textarea:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+        outline: none;
+      }
+
+      .form-group label {
+        font-weight: bold;
+        margin-bottom: 8px;
+        display: block;
+        color: #007bff;
+      }
+
+      /* Enhanced Button */
+      .btn-primary {
+        background: linear-gradient(90deg, #007bff, #00c6ff);
+        border: none;
+        border-radius: 50px;
+        padding: 10px 20px;
+        font-size: 1.2rem;
+        color: #fff;
+        text-transform: uppercase;
+        box-shadow: 0 5px 10px rgba(0, 123, 255, 0.3);
+        transition: transform 0.2s ease, background 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        background: linear-gradient(90deg, #0056b3, #0088cc);
+      }
+
+      .btn-primary:active {
+        transform: translateY(0);
+        box-shadow: 0 3px 6px rgba(0, 123, 255, 0.2);
+      }
+
+      /* Image Grid */
+      .image-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      .image-card {
+        width: 100%;
+        max-width: 220px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 15px;
+        overflow: hidden;
+        background-color: #fff;
+        transition: transform 0.3s ease;
+      }
+
+      .image-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .image-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 1px solid #eee;
+      }
+
+      .card-body {
+        padding: 15px;
+        text-align: center;
+      }
+
+      .card-title {
+        font-size: 1.1rem;
+        color: #007bff;
+        font-weight: bold;
+        margin: 0 0 10px;
+      }
+
+      .no-images {
+        text-align: center;
+        color: #6c757d;
+      }
+
+      /* Download Button */
+      .btn-download {
+        background: linear-gradient(90deg, #007bff, #00c6ff);
+        color: #fff;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        transition: background-color 0.3s ease;
+      }
+
+      .btn-download:hover {
+        background-color: #218838;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Image Gallery</h2>
+
+      <!-- Upload Form -->
+      <form method="POST" enctype="multipart/form-data" class="mb-5">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="title">Image Title</label>
+          {{ form.title }}
+        </div>
+        <div class="form-group">
+          <label for="image">Choose Image</label>
+          {{ form.image }}
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+          Upload Image
+        </button>
+      </form>
+
+      <!-- Display Uploaded Images in a Grid -->
+      <h3>Uploaded Images</h3>
+      <div class="image-grid">
+        {% for image in images %}
+        <div class="image-card">
+          <img src="{{ image.image.url }}" alt="{{ image.title }}" />
+          <div class="card-body">
+            <h5 class="card-title">{{ image.title }}</h5>
+            <a
+              href="{{ image.image.url }}"
+              download="{{ image.title }}"
+              class="btn btn-download"
+            >
+              Download
+            </a>
+          </div>
+        </div>
+        {% empty %}
+        <p class="no-images">No images uploaded yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
